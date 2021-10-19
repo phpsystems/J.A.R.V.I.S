@@ -6,7 +6,7 @@ def setup (openp, closed):
 	GPIO.setup(openp, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 	GPIO.setup(closed, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-def determinePosition (openp, closed)
+def determinePosition (openp, closed, desiredstate=closed)
     if GPIO.input(openp) == GPIO.HIGH:
         print("Helmet is open!")
 
@@ -14,6 +14,10 @@ def determinePosition (openp, closed)
         print("Helmet is closed!")
 
     else: 
-    	closeHelmet ()
+    	if (desiredstate is closed):
+
+	    		closeHelmet ()
+	 	else:
+	 		openHelmet ()
 
 
