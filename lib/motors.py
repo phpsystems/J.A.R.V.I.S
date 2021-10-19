@@ -4,24 +4,32 @@
 import RPi.GPIO as GPIO
 import time
 
+def setup(servo_left, servo_right):
+
 # setup the GPIO pin for the servo
-servo_pin = 13
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(servo_pin,GPIO.OUT)
+	#servo_pin = 13
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(servo_left,GPIO.OUT)
+	GPIO.setup(servo_right,GPIO.OUT)
 
 # setup PWM process
-pwm = GPIO.PWM(servo_pin,50) # 50 Hz (20 ms PWM period)
+	pwm_left = GPIO.PWM(servo_left,50) # 50 Hz (20 ms PWM period)
+	pwm_right = GPIO.PWM(servo_right,50) # 50 Hz (20 ms PWM period)
 
-pwm.start(7) # start PWM by rotating to 90 degrees
+def closeHelmet ():
+	pwm_left.ChangeDutyCycle(2.0)
+	pwm_right.ChangeDutyCycle(12.0)
+	time.sleep(0.5)
+	pwm_left.ChangeDutyCycle(0) # this prevents jitter
+	pwm_right.ChangeDutyCycle(0) # this prevents jitter	
 
-for ii in range(0,3):
-    pwm.ChangeDutyCycle(2.0) # rotate to 0 degrees
-    time.sleep(0.5)
-    pwm.ChangeDutyCycle(12.0) # rotate to 180 degrees
-    time.sleep(0.5)
-    pwm.ChangeDutyCycle(7.0) # rotate to 90 degrees
-    time.sleep(0.5)
+def openHelmet ():
+	pwm_left.ChangeDutyCycle(12.0)
+	pwm_right.ChangeDutyCycle(2.0)
+	time.sleep(0.5)
+	pwm_left.ChangeDutyCycle(0) # this prevents jitter
+	pwm_right.ChangeDutyCycle(0) # this prevents jitter	
 
-pwm.ChangeDutyCycle(0) # this prevents jitter
-pwm.stop() # stops the pwm on 13
-GPIO.cleanup() # good practice when finished using a pin
+def destroy():
+	pwm_left.stop()
+	pwm_right.stop()
